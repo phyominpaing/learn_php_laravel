@@ -1,37 +1,39 @@
-# PHP Study Notes
+# PHP Installation & CLI
 
-## 01 — Installation & CLI
+A **PHP environment** is the setup required to run PHP code on your machine. Before writing any PHP, you need to install PHP and understand how to use it from the command line.
 
 ---
 
 ## Table of Contents
 
-- [What is PHP?](#what-is-php)
-- [Installation](#installation)
-  - [Windows — Chocolatey](#windows--chocolatey)
-  - [macOS — Homebrew](#macos--homebrew)
-  - [Ubuntu/Debian — APT](#ubuntudebian--apt)
-- [Verify Your Installation](#verify-your-installation)
-- [PHP CLI Commands](#php-cli-commands)
-- [Running a PHP File](#running-a-php-file)
-- [Quick Revision](#quick-revision)
+1. [What is PHP?](#what-is-php)
+2. [Installing PHP](#installing-php)
+3. [PHP CLI Commands](#php-cli-commands)
+4. [Running a PHP File](#running-a-php-file)
+5. [Quick Revision](#quick-revision)
 
 ---
 
 ## What is PHP?
 
-- **PHP** (PHP: Hypertext Preprocessor) is a server-side scripting language designed for web development.
-- It can also be used as a **general-purpose language** via the command line (CLI).
-- Files use the `.php` extension.
-- PHP code lives inside `<?php ... ?>` tags.
+- **PHP** (PHP: Hypertext Preprocessor) is a server-side scripting language mainly used for web development.
+- It can also run directly in the terminal using the **PHP CLI** (Command Line Interface).
+- PHP files use the `.php` extension and code lives inside `<?php ?>` tags.
+
+```php
+<?php
+echo "Hello, World!";
+?>
+```
 
 ---
 
-## Installation
+## Installing PHP
 
 ### Windows — Chocolatey
 
-> **Prerequisite:** Install [Chocolatey](https://chocolatey.org/install) first (run PowerShell as Administrator).
+- **Chocolatey** is a package manager for Windows (like `brew` for Mac).
+- Run these commands in **PowerShell as Administrator**.
 
 ```powershell
 # Install PHP
@@ -41,16 +43,16 @@ choco install php
 choco upgrade php
 ```
 
-> ⚠️ **Tip:** After installation, restart your terminal so the `php` command is recognized in PATH.
+> ⚠️ **Warning:** Restart your terminal after installing so Windows recognizes the `php` command in PATH.
 
 ---
 
 ### macOS — Homebrew
 
-> **Prerequisite:** Install [Homebrew](https://brew.sh/) first.
+- **Homebrew** is a package manager for macOS.
 
 ```bash
-# Install PHP (latest stable version)
+# Install latest PHP
 brew install php
 
 # Install a specific version
@@ -63,20 +65,22 @@ brew unlink php && brew link php@8.2
 brew upgrade php
 ```
 
-> ⚠️ **Common Mistake:** After switching versions with `brew link`, you may need to restart your terminal or run `source ~/.zshrc` / `source ~/.bashrc`.
+> ⚠️ **Common Mistake:** After switching versions with `brew link`, restart your terminal or run `source ~/.zshrc` for the change to take effect.
 
 ---
 
-### Ubuntu/Debian — APT
+### Ubuntu — APT
+
+- **APT** is the default package manager for Ubuntu/Debian.
 
 ```bash
-# Update package list
+# Update package list first
 sudo apt update
 
-# Install PHP (default version from repo)
+# Install PHP
 sudo apt install php
 
-# Install a specific version (using Ondřej Surý PPA for newer versions)
+# Install a specific version (add PPA for newer versions)
 sudo add-apt-repository ppa:ondrej/php
 sudo apt update
 sudo apt install php8.3
@@ -85,145 +89,184 @@ sudo apt install php8.3
 sudo apt install php8.3 php8.3-cli php8.3-mbstring php8.3-xml php8.3-curl
 ```
 
-> 💡 **Tip:** The default Ubuntu repo may have an older PHP version. Use the `ondrej/php` PPA for the latest releases.
+> 💡 **Tip:** Ubuntu's default repo may have an older PHP version. Use the `ondrej/php` PPA to get the latest release.
 
 ---
 
-## Verify Your Installation
+### Installation Methods Comparison
 
-```bash
-php -v
-```
-
-Expected output:
-```
-PHP 8.3.x (cli) (built: ...)
-Copyright (c) The PHP Group
-```
+| Platform | Package Manager | Install Command |
+|---|---|---|
+| Windows | Chocolatey | `choco install php` |
+| macOS | Homebrew | `brew install php` |
+| Ubuntu | APT | `sudo apt install php` |
 
 ---
 
 ## PHP CLI Commands
 
-These are the most useful commands you'll run directly in your terminal.
+**PHP CLI** (Command Line Interface) lets you run and inspect PHP directly from the terminal — no browser or web server needed.
 
-| Command | Purpose |
-|---|---|
-| `php -v` | Show PHP version |
-| `php -h` | Show help / list of CLI options |
-| `php --ini` | Show which `php.ini` config file is loaded |
-| `php -i` | Full PHP info dump (like `phpinfo()` in terminal) |
-| `php -a` | Open interactive PHP shell (REPL) |
-| `php -m` | List all loaded PHP modules/extensions |
-| `php filename.php` | Run a PHP script file |
-| `php -r "code"` | Run PHP code inline without a file |
-| `php -l filename.php` | Syntax check a file (lint) without running it |
-| `php -S host:port` | Start PHP's built-in development web server |
+### Verify Installation
 
----
-
-### Command Details & Examples
-
-#### `php -v` — Version Check
 ```bash
 php -v
-# PHP 8.3.2 (cli) (built: Jan 20 2024 00:00:00)
+```
+
+- Shows the currently installed PHP version.
+- Always run this first to confirm PHP installed correctly.
+
+```
+PHP 8.3.2 (cli) (built: Jan 20 2024)
+Copyright (c) The PHP Group
 ```
 
 ---
 
-#### `php -h` — Help
+### Get Help
+
 ```bash
 php -h
-# Prints all available CLI flags and options
+```
+
+- Displays a list of all available CLI options and flags.
+- Example output:
+
+```
+Usage: php [options] [-f] <file> [--] [args...]
+  -v  Version number
+  -i  PHP information
+  -a  Run interactively
+  ...
 ```
 
 ---
 
-#### `php --ini` — Config File Location
+### Find Your Config File
+
 ```bash
 php --ini
-# Configuration File (php.ini) Path: /etc/php/8.3/cli
-# Loaded Configuration File: /etc/php/8.3/cli/php.ini
 ```
 
-> 💡 **Why this matters:** There are often *two* `php.ini` files — one for CLI and one for the web server (Apache/Nginx). Changes to one don't affect the other.
+- Shows which `php.ini` configuration file PHP is currently loading.
+- Example output:
+
+```
+Configuration File (php.ini) Path: /etc/php/8.3/cli
+Loaded Configuration File:         /etc/php/8.3/cli/php.ini
+```
+
+> 💡 **Important:** There are usually **two** `php.ini` files — one for the CLI and one for the web server (Apache/Nginx). Editing one does **not** affect the other.
 
 ---
 
-#### `php -i` — Full PHP Info
+### Full PHP Info Dump
+
 ```bash
 php -i
-# Dumps ALL PHP configuration info (very long output)
+```
 
-# Tip: pipe it to grep to find something specific
-php -i | grep "memory_limit"
-php -i | grep "upload_max"
+- Dumps **all** PHP configuration details to the terminal (equivalent to `phpinfo()` in a browser).
+- The output is very long — pipe it with `grep` to find something specific.
+
+```bash
+# Find a specific setting
+php -i | grep memory_limit
+php -i | grep upload_max_filesize
 ```
 
 ---
 
-#### `php -a` — Interactive Shell (REPL)
+### Interactive Shell (REPL)
+
 ```bash
 php -a
-# Interactive shell
-# php > echo "Hello, World!";
-# Hello, World!
-# php > $x = 10 + 5;
-# php > echo $x;
-# 15
-# php > exit
 ```
 
-> 💡 **REPL** stands for Read-Eval-Print Loop — great for quickly testing expressions without creating a file.
+- Opens an **interactive PHP shell** where you can type and run PHP code line by line.
+- Great for quickly testing expressions without creating a file.
+
+```
+Interactive shell
+
+php > echo "Hello!";
+Hello!
+php > $x = 10 + 5;
+php > echo $x;
+15
+php > exit
+```
+
+> 💡 **REPL** stands for Read-Eval-Print Loop.
 
 ---
 
-#### `php -m` — List Loaded Modules
+### List Loaded Modules/Extensions
+
 ```bash
 php -m
-# [PHP Modules]
-# Core
-# curl
-# mbstring
-# PDO
-# ...
+```
 
-# Grep for a specific extension
+- Lists all PHP **extensions/modules** currently loaded.
+- Use `grep` to check if a specific extension is installed.
+
+```bash
 php -m | grep pdo
+php -m | grep curl
+```
+
+Example output:
+```
+[PHP Modules]
+Core
+curl
+mbstring
+PDO
+pdo_mysql
+...
 ```
 
 ---
 
-#### `php -r` — Run Code Inline
+### Run Code Inline
+
 ```bash
 php -r "echo date('Y-m-d');"
-# 2024-06-13
+# Output: 2024-06-13
 
 php -r "echo PHP_VERSION;"
-# 8.3.2
+# Output: 8.3.2
 ```
 
-> ⚠️ **Warning:** Do NOT add `<?php` tags when using `-r`. The code is already treated as PHP.
+> ⚠️ **Warning:** Do **NOT** add `<?php` tags when using `-r`. The code is already treated as PHP.
 
 ---
 
-#### `php -l` — Syntax Check (Lint)
-```bash
-php -l myfile.php
-# No syntax errors detected in myfile.php
+### Syntax Check (Lint)
 
-# If there's an error:
-# PHP Parse error: syntax error, unexpected token in myfile.php on line 5
+```bash
+php -l filename.php
 ```
 
-> 💡 **Tip:** Run `php -l` before executing a file to catch typos early without running the code.
+- Checks a file for **syntax errors** without actually running it.
+
+```bash
+# No errors
+php -l hello.php
+# No syntax errors detected in hello.php
+
+# With an error
+# PHP Parse error: syntax error, unexpected token in hello.php on line 3
+```
+
+> 💡 **Tip:** Always run `php -l` before executing a new file to catch typos early.
 
 ---
 
-#### `php -S` — Built-in Dev Server
+### Built-in Development Server
+
 ```bash
-# Start a local server in the current directory
+# Start server in current directory
 php -S localhost:8000
 
 # Serve a specific folder
@@ -234,9 +277,26 @@ php -S localhost:8000 -t public/
 
 ---
 
+### PHP CLI Commands Summary
+
+| Command | Purpose |
+|---|---|
+| `php -v` | Show PHP version |
+| `php -h` | Show help and available options |
+| `php --ini` | Show which `php.ini` config is loaded |
+| `php -i` | Full PHP info dump (pipe with `grep`) |
+| `php -a` | Open interactive PHP shell (REPL) |
+| `php -m` | List all loaded modules/extensions |
+| `php -r "code"` | Run PHP code inline without a file |
+| `php -l filename.php` | Syntax check a file without running it |
+| `php -S localhost:8000` | Start built-in development web server |
+| `php filename.php` | Run a PHP script file |
+
+---
+
 ## Running a PHP File
 
-**1. Create a PHP file:**
+- Create a file with the `.php` extension, write your code inside `<?php ?>`, then run it with `php filename.php`.
 
 ```php
 <?php
@@ -244,32 +304,23 @@ php -S localhost:8000 -t public/
 echo "Hello, World!\n";
 ```
 
-**2. Run it from the terminal:**
-
 ```bash
 php hello.php
-# Hello, World!
+# Output: Hello, World!
 ```
 
-> 💡 **Tip:** The `\n` adds a newline in CLI output. In a browser, you'd use `<br>` instead.
+> 💡 **Tip:** `\n` adds a newline in terminal output. In a browser, you'd use `<br>` instead.
 
 ---
 
 ## Quick Revision
 
-| Topic | Key Takeaway |
-|---|---|
-| **PHP** | Server-side scripting language; files end in `.php`; code goes inside `<?php ?>` |
-| **Windows install** | `choco install php` via Chocolatey (run as Administrator) |
-| **macOS install** | `brew install php` via Homebrew; use `php@8.x` for specific versions |
-| **Ubuntu install** | `sudo apt install php`; use `ondrej/php` PPA for latest versions |
-| **`php -v`** | Check which PHP version is active |
-| **`php --ini`** | Find which `php.ini` config file is being used |
-| **`php -i`** | Full config dump; pipe to `grep` to find specific settings |
-| **`php -a`** | Interactive REPL shell for quick testing |
-| **`php -m`** | List all loaded extensions/modules |
-| **`php -l`** | Lint/syntax-check a file without running it |
-| **`php -r`** | Run one-liner PHP code directly in the terminal |
-| **`php -S localhost:8000`** | Start built-in dev server (development only!) |
-| **`php filename.php`** | Execute a PHP script from the terminal |
-| **Two `php.ini` files** | CLI and web server each have their own config — changes to one don't affect the other |
+- PHP needs to be **installed** before you can run any PHP code — use Chocolatey (Windows), Homebrew (macOS), or APT (Ubuntu).
+- The **PHP CLI** lets you run PHP directly in the terminal without a browser or web server.
+- `php -v` confirms your installation; `php --ini` tells you which config file is active.
+- There are **two separate `php.ini` files** — one for CLI, one for web server. They don't affect each other.
+- `php -a` opens an interactive shell for quick testing without creating a file.
+- `php -l` checks for syntax errors **before** running a file — use it as a habit.
+- `php -i | grep <setting>` is the fastest way to find a specific configuration value.
+- `php -S localhost:8000` starts a quick dev server — **development only**, never production.
+- Run any PHP script with `php filename.php`.
