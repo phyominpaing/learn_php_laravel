@@ -257,6 +257,7 @@ echo $message;  // Output: I am global  (global variable is unchanged)
 
 ### Global Scope & the `global` Keyword
 
+- A variable declared outside a function has a **global scope** and can only be accessed outside a function.
 - To access a **global variable inside a function**, you must declare it with the `global` keyword.
 - Without `global`, PHP treats it as a new local variable.
 
@@ -321,6 +322,7 @@ echo $score;        // Output: 150
 
 ### Static Variables
 
+- Sometimes we want a local variable **NOT** to be deleted.
 - Normally, a local variable is **destroyed** when a function finishes.
 - A **static variable** keeps its value between function calls.
 - Declared with the `static` keyword.
